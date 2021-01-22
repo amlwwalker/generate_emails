@@ -296,35 +296,36 @@ func initNewEmails() {
 	}
 }
 func main() {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt)
-	go func(){
-		for sig := range c {
-			log.Printf("captured %v, stopping profiler and exiting..", sig)
-			//ok now check for duplicates
-			idList := []uint{}
-			for _, v := range sentEmails {
-				//print the
-				for _, id := range idList {
-					if v.ID == id {
-						log.Println("WARNING DUPLICATE FOUND!", v.ID)
-					} else {
-						idList = append(idList, v.ID)
-					}
-				}
-
-			}
-		}
-	}()
-	InitDB()
-	var wg sync.WaitGroup
 	initNewEmails()
-	time.Sleep(30 * time.Second)
-	go InitCron(&wg)
-
-
-	wg.Add(1)
-	wg.Wait()
+	//c := make(chan os.Signal, 1)
+	//signal.Notify(c, os.Interrupt)
+	//go func(){
+	//	for sig := range c {
+	//		log.Printf("captured %v, stopping profiler and exiting..", sig)
+	//		//ok now check for duplicates
+	//		idList := []uint{}
+	//		for _, v := range sentEmails {
+	//			//print the
+	//			for _, id := range idList {
+	//				if v.ID == id {
+	//					log.Println("WARNING DUPLICATE FOUND!", v.ID)
+	//				} else {
+	//					idList = append(idList, v.ID)
+	//				}
+	//			}
+	//
+	//		}
+	//	}
+	//}()
+	//InitDB()
+	//var wg sync.WaitGroup
+	//initNewEmails()
+	//time.Sleep(30 * time.Second)
+	//go InitCron(&wg)
+	//
+	//
+	//wg.Add(1)
+	//wg.Wait()
 }
 
 func CountTodaysEmailsForUser(s string) (int, error) {

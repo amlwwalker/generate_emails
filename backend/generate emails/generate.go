@@ -270,7 +270,7 @@ func initNewEmails() {
 				Model:            gorm.Model{},
 				OwnerId:          1,
 				RecipientName:    fmt.Sprintf("%d-amlwwalker", i),
-				RecipientEmail:   fmt.Sprintf("amlwwalker+%d@gmail.com", i),
+				RecipientEmail:   fmt.Sprintf("alex+%d@gmail.com", i), //put your email address here - LEAVE THE +%d and i 
 				SenderName:       v.SenderName,
 				SenderEmail:      v.SenderEmail,
 				Subject:          fmt.Sprintf("subject = %d", i),

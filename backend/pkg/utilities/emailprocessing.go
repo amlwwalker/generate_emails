@@ -77,7 +77,6 @@ func sendBufferedEmailsForAccounts(wg *sync.WaitGroup) {
 			//go func(senderID uint, emailsToSend []database.CampaignEmail) {
 			var gmailService g.Gmail
 			var report *Report
-			defer wg.Done()
 			if gmailService, report = createGmailServiceForSending(user.ID); report != nil {
 				return
 			}

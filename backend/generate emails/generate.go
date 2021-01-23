@@ -1,7 +1,7 @@
 package generate_emails
 
 import (
-"fmt"
+	"fmt"
 	"github.com/jasonlvhit/gocron"
 	"amlwwalker/gmail-backend/backend/pkg/database"
 	"github.com/jinzhu/gorm"
@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"os/signal"
 	"sync"
 	"syreclabs.com/go/faker"
 	"time"
@@ -38,7 +37,9 @@ type CampaignEmail struct {
 	SendingError     string    `json:"sendingError"`
 	ErrorOnSending   *bool     `json:"errorOnSending"`
 }
+
 var sentEmails = []CampaignEmail{}
+
 func CreateCampaignEmail(e CampaignEmail) error {
 	err := db.Create(&e).Error
 	if err != nil {
@@ -74,7 +75,7 @@ func returnBatchedUpdateEmail(maxLimitReturn uint) ([]CampaignEmail, error) {
 		log.Println("error updating batching ", err)
 		return nil, err
 	}
-	if len(limitedOrderedEmails) < 1{
+	if len(limitedOrderedEmails) < 1 {
 		return limitedOrderedEmails, nil
 	}
 	email1 := limitedOrderedEmails[0]
@@ -150,7 +151,8 @@ type sender struct {
 
 //this is a representation of the database object
 var senders = []sender{{SenderName: "Alexz Walker", SenderEmail: "a.mlw.walker@gmail.com", Quota: 0}}
-func (s *sender) retrieveQuota() bool{
+
+func (s *sender) retrieveQuota() bool {
 	//number of emails sent
 	//this should update the quota assuming that it represents one send event
 	if s.Quota > 250 {
@@ -159,7 +161,7 @@ func (s *sender) retrieveQuota() bool{
 	return true
 }
 func InitCron(wg *sync.WaitGroup) {
-	gocron.Every(2).Second().Do(func() {sendBufferedEmailsForAccounts(wg)})
+	gocron.Every(2).Second().Do(func() { sendBufferedEmailsForAccounts(wg) })
 	<-gocron.Start()
 }
 func randate() time.Time {
@@ -286,7 +288,7 @@ func initNewEmails() {
 				Aborted:          nil,
 				SendingError:     "",
 
-				ErrorOnSending:   nil,
+				ErrorOnSending: nil,
 			}
 			err := CreateCampaignEmail(c)
 			if err != nil {
@@ -339,4 +341,3 @@ func sendEmail(email CampaignEmail) (CampaignEmail, error) {
 	sentEmails = append(sentEmails, email)
 	return email, nil
 }
-

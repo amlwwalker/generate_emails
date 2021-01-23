@@ -26,7 +26,7 @@ func ConfigureAuthentication() {
 			"https://www.googleapis.com/auth/userinfo.email",
 			"https://www.googleapis.com/auth/gmail.send",
 			//"https://www.googleapis.com/auth/contacts.readonly",
-			"https://www.googleapis.com/auth/drive.file",
+			//"https://www.googleapis.com/auth/drive.file",
 			//"https://www.googleapis.com/auth/spreadsheets",
 		},
 		Endpoint: google.Endpoint,

@@ -33,10 +33,10 @@ func InitDB() {
 
 	//gob.Register(User{})
 	//db.DropTableIfExists(&Customer{}, &AccessToken{}, &User{})
-	db.AutoMigrate(&User{}, &AccessToken{}, &CampaignEmail{}, &MailError{})
+	db.AutoMigrate(&User{}, &AccessToken{}, &CampaignEmail{}, &MailError{}, &Campaign{}, &Template{})
 	//db.CreateTable(&User{}, &AccessToken{}, &Customer{}, &Campaign{}, &Template{})
 	db.Model(&User{}).AddForeignKey("token_id", "access_tokens(id)", "CASCADE", "CASCADE")
-	db.Model(&Campaign{}).AddForeignKey("template_id", "templates(id)", "RESTRICT", "RESTRICT")
+	//db.Model(&Campaign{}).AddForeignKey("template_id", "templates(id)", "RESTRICT", "RESTRICT")
 	//db.Model(&Campaign{}).AddForeignKey("id", "customers(id)", "CASCADE", "CASCADE")
 	//db.Model(&Campaign{}).AddForeignKey("id", "customers(id)", "CASCADE", "CASCADE") // Foreign key need to define manually
 }

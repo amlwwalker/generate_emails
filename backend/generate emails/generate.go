@@ -36,7 +36,7 @@ type CampaignEmail struct {
 	BatchedAt        time.Time `json:"batchedAt"`
 	Batched          *bool     `json:"batched"` //null is not batched, true is batched
 	SendingError     string    `json:"sendingError"`
-	ErrorOnSending   *bool     `json"errorOnSending`
+	ErrorOnSending   *bool     `json:"errorOnSending"`
 }
 var sentEmails = []CampaignEmail{}
 func CreateCampaignEmail(e CampaignEmail) error {

@@ -1,9 +1,9 @@
-package generate_emails
+package main
 
 import (
+	"amlwwalker/gmail-backend/backend/pkg/database"
 	"fmt"
 	"github.com/jasonlvhit/gocron"
-	"amlwwalker/gmail-backend/backend/pkg/database"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
@@ -114,10 +114,10 @@ func returnBatchedUpdateEmail(maxLimitReturn uint) ([]CampaignEmail, error) {
 var db *gorm.DB
 
 func InitDB() {
-	os.Setenv("PSQL_USERNAME", "alex")
-	os.Setenv("PSQL_PASSWORD", "alex")
-	os.Setenv("PSQL_DATABASE", "envoye")
-	os.Setenv("PSQL_HOST", "localhost")
+	//os.Setenv("PSQL_USERNAME", "alex")
+	//os.Setenv("PSQL_PASSWORD", "alex")
+	//os.Setenv("PSQL_DATABASE", "envoye")
+	//os.Setenv("PSQL_HOST", "localhost")
 
 	username := os.Getenv("PSQL_USERNAME")
 	password := os.Getenv("PSQL_PASSWORD")
@@ -272,7 +272,7 @@ func initNewEmails() {
 				Model:            gorm.Model{},
 				OwnerId:          1,
 				RecipientName:    fmt.Sprintf("%d-amlwwalker", i),
-				RecipientEmail:   fmt.Sprintf("alex+%d@gmail.com", i), //put your email address here - LEAVE THE +%d and i 
+				RecipientEmail:   fmt.Sprintf("upworkertest+%d@gmail.com", i), //put your email address here - LEAVE THE +%d and i
 				SenderName:       v.SenderName,
 				SenderEmail:      v.SenderEmail,
 				Subject:          fmt.Sprintf("subject = %d", i),
@@ -298,6 +298,7 @@ func initNewEmails() {
 	}
 }
 func main() {
+	InitDB()
 	initNewEmails()
 	//c := make(chan os.Signal, 1)
 	//signal.Notify(c, os.Interrupt)

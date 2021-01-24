@@ -1,15 +1,14 @@
-package generate_emails
+package main
 
 import (
-"fmt"
-	"github.com/jasonlvhit/gocron"
 	"amlwwalker/gmail-backend/backend/pkg/database"
+	"fmt"
+	"github.com/jasonlvhit/gocron"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
 	"math/rand"
 	"os"
-	"os/signal"
 	"sync"
 	"syreclabs.com/go/faker"
 	"time"
@@ -36,9 +35,11 @@ type CampaignEmail struct {
 	BatchedAt        time.Time `json:"batchedAt"`
 	Batched          *bool     `json:"batched"` //null is not batched, true is batched
 	SendingError     string    `json:"sendingError"`
-	ErrorOnSending   *bool     `json"errorOnSending`
+	ErrorOnSending   *bool     `json:"errorOnSending"`
 }
+
 var sentEmails = []CampaignEmail{}
+
 func CreateCampaignEmail(e CampaignEmail) error {
 	err := db.Create(&e).Error
 	if err != nil {
@@ -74,7 +75,7 @@ func returnBatchedUpdateEmail(maxLimitReturn uint) ([]CampaignEmail, error) {
 		log.Println("error updating batching ", err)
 		return nil, err
 	}
-	if len(limitedOrderedEmails) < 1{
+	if len(limitedOrderedEmails) < 1 {
 		return limitedOrderedEmails, nil
 	}
 	email1 := limitedOrderedEmails[0]
@@ -113,10 +114,10 @@ func returnBatchedUpdateEmail(maxLimitReturn uint) ([]CampaignEmail, error) {
 var db *gorm.DB
 
 func InitDB() {
-	os.Setenv("PSQL_USERNAME", "alex")
-	os.Setenv("PSQL_PASSWORD", "alex")
-	os.Setenv("PSQL_DATABASE", "envoye")
-	os.Setenv("PSQL_HOST", "localhost")
+	//os.Setenv("PSQL_USERNAME", "alex")
+	//os.Setenv("PSQL_PASSWORD", "alex")
+	//os.Setenv("PSQL_DATABASE", "envoye")
+	//os.Setenv("PSQL_HOST", "localhost")
 
 	username := os.Getenv("PSQL_USERNAME")
 	password := os.Getenv("PSQL_PASSWORD")
@@ -150,7 +151,8 @@ type sender struct {
 
 //this is a representation of the database object
 var senders = []sender{{SenderName: "Alexz Walker", SenderEmail: "a.mlw.walker@gmail.com", Quota: 0}}
-func (s *sender) retrieveQuota() bool{
+
+func (s *sender) retrieveQuota() bool {
 	//number of emails sent
 	//this should update the quota assuming that it represents one send event
 	if s.Quota > 250 {
@@ -159,7 +161,7 @@ func (s *sender) retrieveQuota() bool{
 	return true
 }
 func InitCron(wg *sync.WaitGroup) {
-	gocron.Every(2).Second().Do(func() {sendBufferedEmailsForAccounts(wg)})
+	gocron.Every(2).Second().Do(func() { sendBufferedEmailsForAccounts(wg) })
 	<-gocron.Start()
 }
 func randate() time.Time {
@@ -270,7 +272,7 @@ func initNewEmails() {
 				Model:            gorm.Model{},
 				OwnerId:          1,
 				RecipientName:    fmt.Sprintf("%d-amlwwalker", i),
-				RecipientEmail:   fmt.Sprintf("alex+%d@gmail.com", i), //put your email address here - LEAVE THE +%d and i 
+				RecipientEmail:   fmt.Sprintf("upworkertest+%d@gmail.com", i), //put your email address here - LEAVE THE +%d and i
 				SenderName:       v.SenderName,
 				SenderEmail:      v.SenderEmail,
 				Subject:          fmt.Sprintf("subject = %d", i),
@@ -286,7 +288,7 @@ func initNewEmails() {
 				Aborted:          nil,
 				SendingError:     "",
 
-				ErrorOnSending:   nil,
+				ErrorOnSending: nil,
 			}
 			err := CreateCampaignEmail(c)
 			if err != nil {
@@ -296,6 +298,7 @@ func initNewEmails() {
 	}
 }
 func main() {
+	InitDB()
 	initNewEmails()
 	//c := make(chan os.Signal, 1)
 	//signal.Notify(c, os.Interrupt)
@@ -339,4 +342,3 @@ func sendEmail(email CampaignEmail) (CampaignEmail, error) {
 	sentEmails = append(sentEmails, email)
 	return email, nil
 }
-

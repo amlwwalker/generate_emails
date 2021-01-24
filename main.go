@@ -29,7 +29,7 @@ func main() {
 	router := gin.Default()
 	config := cors.DefaultConfig()
 	log.Println("PR_SERVER", os.Getenv("PR_SERVER"))
-	config.AllowOrigins = []string{"https://envoye.app", os.Getenv("PR_SERVER")}
+	config.AllowOrigins = []string{"https://envoye.app"}
 	config.AllowCredentials = true
 	config.AddAllowHeaders("x-access-token")
 	//config := cors.DefaultConfig()
@@ -37,19 +37,18 @@ func main() {
 	//cors.New(config)
 	router.Use(cors.New(config))
 
-	router.GET("/healthz", func(c *gin.Context) {c.Status(http.StatusOK); return })
+	router.GET("/healthz", func(c *gin.Context) { c.Status(http.StatusOK); return })
 	auth := router.Group("/auth")
-	
+
 	{
 		auth.GET("/login", authentication.OAuthGoogle) //starts an authentication
 		auth.GET("/callback", authentication.Callback) //authenticates a user
-		auth.GET("/private", authentication.Session) //checks for the authd user
+		auth.GET("/private", authentication.Session)   //checks for the authd user
 	}
 
 	var wg sync.WaitGroup
 	go utilities.Cron(&wg)
 
 	// Start the app
-	router.Run(":"+os.Getenv("SERVER_PORT"))
+	router.Run(":" + os.Getenv("SERVER_PORT"))
 }
-

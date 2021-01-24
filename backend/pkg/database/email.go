@@ -6,7 +6,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type Campaign struct {}
+type Campaign struct {
+	gorm.Model
+}
 
 type CampaignEmail struct {
 	gorm.Model

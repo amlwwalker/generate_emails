@@ -77,7 +77,6 @@ func sendBufferedEmailsForAccounts(wg *sync.WaitGroup) {
 			//go func(senderID uint, emailsToSend []database.CampaignEmail) {
 			var gmailService g.Gmail
 			var report *Report
-			defer wg.Done()
 			if gmailService, report = createGmailServiceForSending(user.ID); report != nil {
 				return
 			}
@@ -273,7 +272,8 @@ func sendEmail(e database.CampaignEmail, gmailService g.Gmail, inject bool) (dat
 	if err := database.UpdateEmail(e); err != nil {
 		return e, errorPreparingEmail(e, err)
 	}
-	log.Printf("SENT: ", e.ID, e.CampaignID, e.RecipientEmail, e.Sent, e.Batched, e.Aborted, e.ErrorOnSending, e.Sent, e.SentAt)
+	log.Printf("SENT: emailID: %d, campaignID: %d, recipientEmail: %s, sent: %t, batched: %t, sentAt: %s",
+		int(e.ID), int(e.CampaignID), e.RecipientEmail, *e.Sent, *e.Batched, e.SentAt.Format(time.Stamp))
 	return e, nil
 }
 
